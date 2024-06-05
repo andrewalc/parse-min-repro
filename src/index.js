@@ -27,6 +27,59 @@ async function main() {
 
 async function afterStart() {
   // Put parse code here
+    
+  // Creating an PointerTest object
+  const pointerTestObj = new Parse.Object("PointerTest");
+  await pointerTestObj.save(null, { useMasterKey: true });
+
+  // Create another object that has a pointer to the above object and sets properly
+  const obj = new Parse.Object("SomeObject");
+  obj.set("pointerTo", pointerTestObj);
+  await obj.save(null, { useMasterKey: true });
+
+  // Create another object and set the pointer field to null
+  const fields2 = {
+    pointerTo: null
+  };
+  const test1 = new Parse.Object("SomeObject", fields2);
+  await test1.save(null, { useMasterKey: true });
+  console.log("Saved test1");
+
+  // Create another object, but this time set the field to null explicitly
+  const test2 = new Parse.Object("SomeObject");
+  test2.set("pointerTo", null);
+  await test2.save(null, { useMasterKey: true });
+  console.log("Saved test2");
+
+  // Create another object, but this time the field is undefined
+  // const fields = {
+  //   pointerTo: undefined
+  // };
+  // const test3 = new Parse.Object("SomeObject", fields);
+  // await test3.save(null, { useMasterKey: true });
+  // console.log("Saved test3");
+  /** An uncaught exception occurred: Cannot read properties of undefined (reading 'objectId')Stack Trace:
+      TypeError: Cannot read properties of undefined (reading 'objectId')
+      at /src/node_modules/parse-server/lib/Adapters/Storage/Postgres/PostgresStorageAdapter.js:1217:46
+      at Array.forEach (<anonymous>)
+      at PostgresStorageAdapter.createObject (/src/node_modules/parse-server/lib/Adapters/Storage/Postgres/PostgresStorageAdapter.js:1170:25)
+      at /src/node_modules/parse-server/lib/Controllers/DatabaseController.js:684:29
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5) 
+   */
+
+  // Create another object, but this time the field is set to undefined explicitly
+  // const test4 = new Parse.Object("SomeObject");
+  // test4.set("pointerTo", undefined);
+  // await test4.save(null, { useMasterKey: true });
+  // console.log("Saved test4");
+  /** An uncaught exception occurred: Cannot read properties of undefined (reading 'objectId')Stack Trace:
+      TypeError: Cannot read properties of undefined (reading 'objectId')
+      at /src/node_modules/parse-server/lib/Adapters/Storage/Postgres/PostgresStorageAdapter.js:1217:46
+      at Array.forEach (<anonymous>)
+      at PostgresStorageAdapter.createObject (/src/node_modules/parse-server/lib/Adapters/Storage/Postgres/PostgresStorageAdapter.js:1170:25)
+      at /src/node_modules/parse-server/lib/Controllers/DatabaseController.js:684:29
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+  */
   console.log("Code complete");
 }
 
