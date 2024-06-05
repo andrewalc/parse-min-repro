@@ -1,0 +1,34 @@
+services:
+  postgres-db:
+    image: postgres:16.3-alpine
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volumes/postgres/db:/data/db
+
+  server:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    container_name: server
+    depends_on:
+      - postgres-db
+    ports:
+      - "1337:1337" 
+    environment:
+      - DATABASE_URI=postgres://postgres:password@postgres-db:5432/postgres
+
+  dashboard:
+    image: parseplatform/parse-dashboard
+    platform: linux/x86_64
+    restart: unless-stopped
+    container_name: dashboard
+    ports:
+      - "4040:4040"
+    command: --dev --appId myAppId --masterKey myMasterKey --serverURL http://localhost:1337/parse

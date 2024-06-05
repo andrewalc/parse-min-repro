@@ -1,22 +1,13 @@
 const express = require('express');
 const { resolve } = require('path');
 const ParseServer = require('parse-server').ParseServer;
-const { MongoMemoryServer } = require('mongodb-memory-server-global');
 
 const app = express();
 
 async function main() {
-  // Create a memory server and get its uri
-  const mongod = await MongoMemoryServer.create({
-    instance: {
-      ip: '::,0.0.0.0',
-      dbName: 'db',
-    },
-  });
-
   const server = new ParseServer({
-    databaseURI: mongod.getUri(), // Connection string for your MongoDB database
-    cloud: './cloud/main.js', // Path to your Cloud Code
+    databaseURI: process.env.DATABASE_URI, // Connection string for your MongoDB database
+    cloud: cloudCode, // Path to your Cloud Code
     appId: 'myAppId',
     masterKey: 'myMasterKey', // Keep this key secret!
     fileKey: 'optionalFileKey',
@@ -43,3 +34,8 @@ async function main() {
 main().then(() => {
   console.log('Server startup complete');
 });
+
+
+function cloudCode() {
+  console.log("Cloud code start");
+}
