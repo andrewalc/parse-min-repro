@@ -1,5 +1,4 @@
 const express = require('express');
-const { resolve } = require('path');
 const ParseServer = require('parse-server').ParseServer;
 
 const app = express();
@@ -12,12 +11,7 @@ async function main() {
     masterKey: 'myMasterKey', // Keep this key secret!
     fileKey: 'optionalFileKey',
     serverURL: 'http://localhost:1337/parse', // Don't forget to change to https if needed
-  });
-
-  app.use(express.static('static'));
-
-  app.get('/', (req, res) => {
-    res.sendFile(resolve(__dirname, 'pages/index.html'));
+    masterKeyIps: ['0.0.0.0/0', '::/0'],
   });
 
   // Start server
@@ -31,11 +25,12 @@ async function main() {
   });
 }
 
+function cloudCode() {
+  const obj = new Parse.Object("TestObject");
+
+  console.log("Cloud code complete");
+}
+
 main().then(() => {
   console.log('Server startup complete');
 });
-
-
-function cloudCode() {
-  console.log("Cloud code start");
-}
