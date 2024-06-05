@@ -16,13 +16,16 @@ services:
     build: 
       context: ./
       dockerfile: Dockerfile
-    restart: unless-stopped
+    restart: no
     container_name: server
     depends_on:
       - postgres-db
     ports:
       - "1337:1337" 
     environment:
+      - APP_ID=myAppId
+      - MASTER_KEY=myMasterKey
+      - SERVER_URL=http://localhost:1337/parse
       - DATABASE_URI=postgres://postgres:password@postgres-db:5432/postgres
 
   dashboard:
