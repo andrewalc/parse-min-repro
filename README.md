@@ -1,7 +1,7 @@
-# Simple express demo
+# Simple parse repro 
 
-> Express: fast, unopinionated, minimalist web framework for Node.js
+Includes a docker compose file for easy startup. 
 
-This project shows a simple express server serving a single HTML page and using `express.static` to serve static files.
-
-Check out the [express documentation](https://expressjs.com/) for more information.
+``` bash
+docker compose -f "compose.yaml" up -d --build
+```
